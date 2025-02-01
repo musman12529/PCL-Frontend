@@ -1,9 +1,7 @@
-import User from "@/models/User";
-import connect from "@/utils/db";
-import bcrypt from "bcryptjs";
+
 import { NextResponse } from "next/server";
 
-export const POST = async (request) => {
+export const POST = async (request: Request) => {
   // Destructure the username, email, and password from the request body
   const { username, email, password } = await request.json();
   

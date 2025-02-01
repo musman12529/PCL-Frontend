@@ -5,7 +5,26 @@ import Link from 'next/link';
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-const ProjectCard = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick }) => {
+// Define the type for the project prop
+interface Project {
+  _id: string;
+  projectName: string;
+  dueDate: string;
+  status: string;
+  userEmail: string;
+  createdAt: string;
+  assignedTo: string[];
+  teammateUsernames?: string[];
+}
+
+interface ProjectCardProps {
+  project: Project;
+  onEditClick: (project: Project) => void;
+  onDeleteClick: (projectId: string) => void;
+  onAddTeammatesClick: (project: Project) => void;
+}
+
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleDropdownToggle = () => {
@@ -134,10 +153,10 @@ const ProjectCard = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick 
   
 
   const ProjectsPage = () => {
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState<Project[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
-    const [currentProject, setCurrentProject] = useState(null);
+    const [currentProject, setCurrentProject] = useState<Project | null>(null);
     const [newProject, setNewProject] = useState({
       projectName: "",
       status: "In progress",
@@ -171,7 +190,7 @@ const ProjectCard = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick 
     
           // Fetch usernames for assigned teammates
           const enhancedProjects = await Promise.all(
-            projectsData.map(async (project) => {
+            projectsData.map(async (project: Project) => {
               const teammates = await Promise.all(
                 project.assignedTo.map(async (email) => {
                   console.log(email)
@@ -237,6 +256,10 @@ const ProjectCard = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick 
   };
 
   const handleEditProject = async () => {
+    if (!currentProject) {
+      console.error("No current project selected");
+      return; // Exit early if currentProject is null
+    }
     const updatedProject = { ...currentProject, projectName: newProject.projectName, status: newProject.status, dueDate: newProject.dueDate };
 
     try {
@@ -263,11 +286,15 @@ const ProjectCard = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick 
         throw new Error("Failed to update project");
       }
     } catch (error) {
-      console.error(error.message);
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error('An unknown error occurred');
+      }
     }
   };
 
-  const handleDeleteProject = async (projectId) => {
+  const handleDeleteProject = async (projectId: string) => {
     try {
       const response = await fetch(`/api/deleteProject?id=${projectId}`, {
         method: "DELETE",
@@ -282,7 +309,7 @@ const ProjectCard = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick 
     }
   };
 
-  const openEditModal = (project) => {
+  const openEditModal = (project: Project) => {
     setIsModalOpen(true);
     setIsEditMode(true);
     setCurrentProject(project);
@@ -312,7 +339,7 @@ const ProjectCard = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick 
         const response = await fetch("/api/getTeammate", {
           method: "GET",
           headers: {
-            "user-email": userEmail,
+            "user-email": userEmail || "",
             "Content-Type": "application/json",
           },
       });

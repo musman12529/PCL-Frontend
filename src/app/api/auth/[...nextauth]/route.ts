@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions }from "next-auth";
 import { Account, User as AuthUser } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-export const authOptions: any = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -40,7 +40,7 @@ export const authOptions: any = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account }: { user: AuthUser; account: Account }) {
+    async signIn({ user, account }: { user: AuthUser; account: Account | null;}) {
       if (account?.provider === "credentials") {
         return true; // Credentials login handled in `authorize`
       }
@@ -48,7 +48,7 @@ export const authOptions: any = {
       if (account?.provider === "github") {
         try {
           // Make an API call to save GitHub user data in the backend
-          const response = await fetch("https://pcl-backend-pi.vercel.app/api/auth/github", {
+          const response = await fetch("http://localhost:4000/api/auth/github", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -72,5 +72,5 @@ export const authOptions: any = {
   },
 };
 
-export const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export const handler = NextAuth(authOptions) as never;
+export { handler as GET, handler as POST};
