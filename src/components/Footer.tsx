@@ -5,7 +5,7 @@ const Footer = () => {
 
   return (
     <footer className="mt-16 pb-8">
-        <p>&copy; 2024 Task Tracker. All rights reserved.</p>
+        <p>&copy; 2024 Project Manager. All rights reserved.</p>
       </footer>
   );
 };
