@@ -225,3 +225,138 @@ body {
 .rise-2 { animation-delay: 0.15s; }
 .rise-3 { animation-delay: 0.3s; }
 .rise-4 { animation-delay: 0.45s; }
+
+/* App surface utilities for post-login pages */
+.app-card {
+  position: relative;
+  background: rgba(15, 17, 36, 0.6);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  transition: border-color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.app-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px -28px rgba(168, 85, 247, 0.45);
+}
+
+.app-modal {
+  background: linear-gradient(180deg, rgba(13, 16, 39, 0.95), rgba(10, 11, 30, 0.95));
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-overlay {
+  background: radial-gradient(
+      80% 80% at 50% 50%,
+      rgba(13, 16, 39, 0.7),
+      rgba(5, 6, 15, 0.85)
+    );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Badges / pills */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+}
+.badge-rose {
+  color: #fda4af;
+  background: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.35);
+}
+.badge-amber {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+.badge-emerald {
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+.badge-cyan {
+  color: #67e8f9;
+  background: rgba(34, 211, 238, 0.12);
+  border-color: rgba(34, 211, 238, 0.35);
+}
+.badge-violet {
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.14);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+.badge-zinc {
+  color: #d4d4d8;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Soft button styles */
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+  transition: background 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.btn-danger {
+  background: linear-gradient(90deg, #f43f5e, #db2777);
+  color: white;
+  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-danger:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px -10px rgba(244, 63, 94, 0.5);
+}
+
+/* Avatar gradient ring */
+.avatar-ring {
+  background: linear-gradient(135deg, #a855f7, #22d3ee);
+  padding: 2px;
+  border-radius: 9999px;
+}
+
+/* Section heading */
+.section-h1 {
+  font-size: 2.25rem;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: white;
+}
+@media (min-width: 640px) {
+  .section-h1 { font-size: 2.75rem; }
+}
+
+/* Page top padding helper */
+.page-pad {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+}
+@media (min-width: 768px) {
+  .page-pad {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}

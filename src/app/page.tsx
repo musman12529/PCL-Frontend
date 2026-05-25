@@ -32,9 +32,9 @@ export default function Home() {
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-300">
-              PCL is the project OS for high-velocity teams. Tasks, sprints, chat
-              and AI in one calm, focused workspace. No bloat. No tabs. Just
-              flow.
+              The all-in-one Project Management Platform for high-velocity
+              teams. Tasks, sprints, chat and AI in one calm, focused workspace.
+              No bloat. No tabs. Just flow.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -92,7 +92,7 @@ export default function Home() {
                     <span className="h-3 w-3 rounded-full bg-emerald-400/80" />
                   </div>
                   <div className="rounded-md bg-white/5 px-3 py-1 text-xs text-zinc-400">
-                    pcl.studio / sprint-24
+                    project-platform / sprint-24
                   </div>
                   <div className="text-xs text-zinc-500">⌘K</div>
                 </div>
@@ -230,7 +230,7 @@ export default function Home() {
       <section id="features" className="relative mx-auto max-w-7xl px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm uppercase tracking-[0.3em] text-fuchsia-300/80">
-            Why PCL
+            Why this platform
           </p>
           <h2 className="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">
             Everything your team needs.

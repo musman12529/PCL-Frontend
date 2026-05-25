@@ -47,8 +47,11 @@ const Navbar = () => {
               <path d="M4 7h16M4 12h10M4 17h16" />
             </svg>
           </span>
-          <span className="text-lg font-semibold tracking-tight text-white">
-            PCL<span className="text-shimmer">.studio</span>
+          <span className="hidden text-lg font-semibold tracking-tight text-white sm:inline">
+            Project <span className="text-shimmer">Management</span> Platform
+          </span>
+          <span className="text-lg font-semibold tracking-tight text-white sm:hidden">
+            <span className="text-shimmer">PMP</span>
           </span>
         </Link>
 

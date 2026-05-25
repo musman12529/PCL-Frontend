@@ -9,8 +9,9 @@ import SessionProvider from "@/utils/SessionProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Project Manager",
-  description: "Plan. Build. Ship. The project OS your team deserves.",
+  title: "Project Management Platform",
+  description:
+    "Plan, build and ship together. The all-in-one project management platform for high-velocity teams.",
 };
 
 export default async function RootLayout({

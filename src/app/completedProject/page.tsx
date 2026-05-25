@@ -1,12 +1,10 @@
 "use client";
-import Link from 'next/link';
-
+import Link from "next/link";
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-// Define the type for the project prop
-interface Project {
+type Project = {
   _id: string;
   projectName: string;
   dueDate: string;
@@ -15,516 +13,180 @@ interface Project {
   createdAt: string;
   assignedTo: string[];
   teammateUsernames?: string[];
-}
+};
 
-interface ProjectCardProps {
-  project: Project;
-  onEditClick: (project: Project) => void;
-  onDeleteClick: (projectId: string) => void;
-  onAddTeammatesClick: (project: Project) => void;
-}
+const avatarPalette = [
+  "from-fuchsia-500 to-pink-500",
+  "from-cyan-400 to-blue-500",
+  "from-lime-400 to-emerald-500",
+  "from-amber-400 to-orange-500",
+  "from-violet-500 to-indigo-500",
+  "from-rose-400 to-fuchsia-500",
+];
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEditClick, onDeleteClick, onAddTeammatesClick }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const isProjectDataLoaded = project.projectName && project.dueDate && project.status;
-
+const ProjectCard = ({ project }: { project: Project }) => {
   return (
-    <div className="bg-white border border-gray-300 rounded-lg p-3 shadow-md hover:shadow-lg transition relative z-1">
-      <div className="absolute top-2 right-2 cursor-pointer">
-        <button className="text-gray-500 hover:text-gray-700" onClick={handleDropdownToggle}>
-          ...
-        </button>
-        {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 bg-white border border-gray-300 shadow-md rounded-lg w-32">
-            <ul className="text-sm">
-              <li
-                className="p-2 cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  onEditClick(project);
-                  setIsDropdownOpen(false);
-                }}
-              >
-                Edit
-              </li>
-              <li
-                className="p-2 cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  onDeleteClick(project._id);
-                  setIsDropdownOpen(false);
-                }}
-              >
-                Delete
-              </li>
-              <li
-                className="p-2 cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  onAddTeammatesClick(project);
-                  setIsDropdownOpen(false);
-                }}
-              >
-                Add Teammates
-              </li>
-            </ul>
-          </div>
+    <div className="app-card group relative flex flex-col p-5">
+      <span className="badge badge-emerald w-fit">
+        {project.status.toUpperCase()}
+      </span>
+      <h3 className="mt-3 text-lg font-semibold text-white">
+        {project.projectName}
+      </h3>
+
+      <dl className="mt-4 grid grid-cols-2 gap-3 text-xs">
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+          <dt className="text-zinc-500">Due</dt>
+          <dd className="mt-0.5 text-zinc-200">
+            {new Date(project.dueDate).toLocaleDateString()}
+          </dd>
+        </div>
+        <div className="rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+          <dt className="text-zinc-500">Created</dt>
+          <dd className="mt-0.5 text-zinc-200">
+            {new Date(project.createdAt).toLocaleDateString()}
+          </dd>
+        </div>
+        <div className="col-span-2 rounded-lg border border-white/5 bg-white/[0.02] px-3 py-2">
+          <dt className="text-zinc-500">Owner</dt>
+          <dd className="mt-0.5 truncate text-zinc-200">{project.userEmail}</dd>
+        </div>
+      </dl>
+
+      <div className="my-4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      <p className="text-xs uppercase tracking-wider text-zinc-500">
+        Assigned teammates
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {project.teammateUsernames && project.teammateUsernames.length > 0 ? (
+          project.teammateUsernames.map((username, index) => (
+            <div
+              key={index}
+              className={`group relative inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${
+                avatarPalette[index % avatarPalette.length]
+              } text-xs font-bold text-white ring-2 ring-[#070815]`}
+            >
+              {username.charAt(0).toUpperCase()}
+              <span className="pointer-events-none absolute -top-9 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-[#0d1027] px-2 py-1 text-[10px] text-white group-hover:block">
+                {username}
+              </span>
+            </div>
+          ))
+        ) : (
+          <span className="text-xs text-zinc-500">No teammates</span>
         )}
       </div>
 
-      <p
-        className={`text-sm font-semibold ${
-          project.status === "In progress" ? "text-red-500" : "text-green-500"
-        }`}
-      >
-        {isProjectDataLoaded ? project.status.toUpperCase() : "Loading..."}
-      </p>
-      <h3 className="font-bold text-xl">{isProjectDataLoaded ? project.projectName : "Loading..."}</h3>
-      <p className="text-sm text-gray-500 mb-2">
-        <strong>Due:</strong> {isProjectDataLoaded ? new Date(project.dueDate).toLocaleDateString() : "Loading..."}
-      </p>
-      <p className="text-sm text-gray-600 mb-2">
-        <strong>Created By:</strong> {isProjectDataLoaded ? project.userEmail : "Loading..."}
-      </p>
-      <p className="text-sm text-gray-500 mb-2">
-        <strong>Created On:</strong> {isProjectDataLoaded ? new Date(project.createdAt).toLocaleDateString() : "Loading..."}
-      </p>
-      
-      {/* Thin line separator */}
-      <div className="border-b border-gray-200 my-3"></div>
-
-      <p className="text-sm text-gray-500 mb-2">
-        <strong>Assigned Teammates:</strong> 
-      </p>
-
-      {/* Display teammate usernames as circles */}
-      <div className="flex flex-wrap mt-2">
-        {project.teammateUsernames &&
-          project.teammateUsernames.map((username, index) => {
-            // List of colors
-            const colors = ['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-yellow-500', 'bg-purple-500'];
-            // Get a color from the list based on the index
-            const circleColor = colors[index % colors.length];
-
-            return (
-              <div
-                key={index}
-                className={`w-8 h-8 flex items-center justify-center ${circleColor} text-white rounded-full text-xs font-bold mr-2 mb-2 relative group`}
-              >
-                {username.charAt(0).toUpperCase()}
-                {/* Tooltip on hover */}
-                <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden group-hover:block text-white bg-black text-xs rounded-md p-1">
-                  Assigned to {username}
-                </div>
-              </div>
-            );
-          })}
+      <div className="mt-6">
+        <Link href={`/MyTasks?id=${project._id}`}>
+          <button className="btn-ghost inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium">
+            View tasks
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </button>
+        </Link>
       </div>
-
-      {/* Thin line separator */}
-      <div className="border-b border-gray-200 my-3"></div>
-      <Link href={`/MyTasks?id=${project._id}`}>
-      <button
-        className="h-fit w-fit px-[1em] py-[0.5em] text-base border-[1px] border-[rgba(75,30,133,0.5)] rounded-full flex justify-center items-center gap-[0.5em] overflow-hidden group hover:translate-y-[0.125em] duration-200 backdrop-blur-[12px] bg-blue-500 text-white"
-      >
-        <p>open</p>
-        <svg
-          className="w-6 h-6 group-hover:translate-x-[10%] duration-300"
-          stroke="currentColor"
-          strokeWidth="1"
-          viewBox="0 0 24 24"
-          fill="white"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-          ></path>
-        </svg>
-      </button>
-      </Link>    
     </div>
   );
 };
 
-  
+const CompletedProjectsPage = () => {
+  const { data: session } = useSession();
+  const [projects, setProjects] = useState<Project[]>([]);
 
-  const ProjectsPage = () => {
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isEditMode, setIsEditMode] = useState(false);
-    const [currentProject, setCurrentProject] = useState<Project | null>(null);
-    const [newProject, setNewProject] = useState({
-      projectName: "",
-      status: "In progress",
-      dueDate: "",
-    });
-    const [teammates, setTeammates] = useState([]);
-    const [selectedTeammates, setSelectedTeammates] = useState([]);
-    const [isTeammatesModalOpen, setIsTeammatesModalOpen] = useState(false);
-    const [teammatesWithUsernames, setTeammatesWithUsernames] = useState([]);
-
-  
-    const { data: session } = useSession();
-  
-    useEffect(() => {
-      const fetchProjects = async () => {
-        const userEmail = localStorage.getItem("email");
-        if (!userEmail) return;
-    
-        try {
-          const response = await fetch("/api/getProject", {
-            method: "GET",
-            headers: {
-              "user-email": userEmail,
-              "Content-Type": "application/json",
-            },
-          });
-    
-          if (!response.ok) throw new Error("Failed to fetch projects");
-    
-          const projectsData = await response.json();
-    
-          // Fetch usernames for assigned teammates
-          const enhancedProjects = await Promise.all(
-            projectsData.map(async (project: Project) => {
-              const teammates = await Promise.all(
-                project.assignedTo.map(async (email) => {
-                  console.log(email)
-                  try {
-                    const response = await fetch("/api/getUsername", {
-                      method: "GET",
-                      headers: { "user-email": email },
-                    });
-    
-                    if (!response.ok) throw new Error("Failed to fetch username");
-    
-                    const { username } = await response.json();
-                    console.log(username)
-                    return username;
-                  } catch (error) {
-                    console.error(`Error fetching username for ${email}:`, error);
-                    return "Unknown"; // Default fallback
-                  }
-                })
-              );
-              return { ...project, teammateUsernames: teammates };
-            })
-          );
-    
-          setProjects(enhancedProjects);
-        } catch (error) {
-          console.error("Error fetching projects:", error);
-        }
-      };
-    
-      fetchProjects();
-    }, [session]);
-
-  const handleAddProject = async () => {
-    const userEmail =  localStorage.getItem("email");
-    if (!userEmail) return;
-
-    try {
-      const response = await fetch("/api/createProject", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "user-email": userEmail,
-        },
-        body: JSON.stringify(newProject),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create project");
-      }
-
-      const data = await response.json();
-      setProjects((prevProjects) => [...prevProjects, data]);
-      setIsModalOpen(false);
-      setNewProject({
-        projectName: "",
-        status: "In progress",
-        dueDate: "",
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleEditProject = async () => {
-    if (!currentProject) {
-      console.error("No current project selected");
-      return; // Exit early if currentProject is null
-    }
-    const updatedProject = { ...currentProject, projectName: newProject.projectName, status: newProject.status, dueDate: newProject.dueDate };
-
-    try {
-      const response = await fetch("/api/updateProject", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "id": currentProject._id, // Add project ID in headers
-        },
-        body: JSON.stringify(updatedProject),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setProjects((prevProjects) =>
-          prevProjects.map((proj) =>
-            proj._id === data._id ? data : proj
-          )
-        );
-        setIsModalOpen(false);
-        setIsEditMode(false);
-        setCurrentProject(null);
-      } else {
-        throw new Error("Failed to update project");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      } else {
-        console.error('An unknown error occurred');
-      }
-    }
-  };
-
-  const handleDeleteProject = async (projectId: string) => {
-    try {
-      const response = await fetch(`/api/deleteProject?id=${projectId}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setProjects((prevProjects) =>
-          prevProjects.filter((project) => project._id !== projectId)
-        );
-      }
-    } catch (error) {
-      console.error("Failed to delete project", error);
-    }
-  };
-
-  const openEditModal = (project: Project) => {
-    setIsModalOpen(true);
-    setIsEditMode(true);
-    setCurrentProject(project);
-    setNewProject({
-      projectName: project.projectName,
-      status: project.status,
-      dueDate: project.dueDate,
-    });
-  };
-
-  const openAddModal = () => {
-    setIsModalOpen(true);
-    setIsEditMode(false);
-    setNewProject({
-      projectName: "",
-      status: "In progress",
-      dueDate: "",
-    });
-  };
-
-
-
-
-  const fetchTeammates = async () => {
-    try {
-        const userEmail = localStorage.getItem("email");
-        const response = await fetch("/api/getTeammate", {
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const userEmail = localStorage.getItem("email");
+      if (!userEmail) return;
+      try {
+        const response = await fetch("/api/getProject", {
           method: "GET",
           headers: {
-            "user-email": userEmail || "",
+            "user-email": userEmail,
             "Content-Type": "application/json",
           },
-      });
+        });
+        if (!response.ok) throw new Error("Failed to fetch projects");
+        const projectsData = await response.json();
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch teammates");
+        const enhancedProjects: Project[] = await Promise.all(
+          projectsData.map(async (project: Project) => {
+            const teammates = await Promise.all(
+              (project.assignedTo || []).map(async (email) => {
+                try {
+                  const r = await fetch("/api/getUsername", {
+                    method: "GET",
+                    headers: { "user-email": email },
+                  });
+                  if (!r.ok) throw new Error("Failed to fetch username");
+                  const { username } = await r.json();
+                  return username;
+                } catch (err) {
+                  console.error(`Error fetching username for ${email}:`, err);
+                  return "Unknown";
+                }
+              })
+            );
+            return { ...project, teammateUsernames: teammates };
+          })
+        );
+        setProjects(enhancedProjects);
+      } catch (err) {
+        console.error("Error fetching projects:", err);
       }
+    };
+    fetchProjects();
+  }, [session]);
 
-      const data = await response.json();
-      
-      setTeammates(data);
-      
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const handleAddTeammates = async () => {
-    const projectId=currentProject._id
-    try {
-      const response = await fetch("/api/addProjectTeammate", {
-        method: "PUT",
-        headers: {
-          "id":projectId,  
-          "Content-Type": "application/json",
-          
-        },
-        body: JSON.stringify({ teammateEmail: selectedTeammates }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        // Check if the error data contains a message
-        const errorMessage = errorData.message || 'Something went wrong';
-        alert(errorMessage); // Display the error message to the user
-        return;
-      }
-
-      const updatedProject = await response.json();
-
-    // Update the project state immediately with the new teammate
-    setProjects((prevProjects) =>
-      prevProjects.map((proj) =>
-        proj._id === updatedProject._id ? updatedProject : proj
-      )
-    );
-      setIsTeammatesModalOpen(false);
-      setSelectedTeammates([]);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const handleTeammatesModalOpen = (project) => {
-    setCurrentProject(project);
-    fetchTeammates();
-    setIsTeammatesModalOpen(true);
-  };
+  const completed = projects.filter((p) => p.status === "Completed");
 
   return (
-    <div className="container mx-auto p-4">
-  {/* Title and Add New Project Button on the same line */}
-  <div className="flex items-center justify-between mb-4">
-    <h1 className="text-4xl font-bold text-blue-500">Completed Projects</h1>
-    
-  </div>
+    <div className="relative isolate min-h-[calc(100vh-80px)] overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-grid" />
+        <div className="absolute -top-32 left-1/4 h-80 w-80 rounded-full bg-emerald-500/20 blur-3xl animate-blob" />
+        <div className="absolute bottom-0 right-1/4 h-80 w-80 rounded-full bg-cyan-500/20 blur-3xl animate-blob delay-2s" />
+      </div>
 
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-  {projects.map((project) =>
-    project.status === "Completed" ? (
-      <ProjectCard
-        key={project._id}
-        project={project}
-        onEditClick={openEditModal}
-        onDeleteClick={handleDeleteProject}
-        onAddTeammatesClick={handleTeammatesModalOpen} // Pass the function here
-      />
-    ) : null
-  )}
-</div>
-      
-      
+      <div className="mx-auto w-full max-w-7xl page-pad">
+        <div className="mb-8">
+          <p className="text-xs uppercase tracking-[0.3em] text-emerald-300/80">
+            Archive
+          </p>
+          <h1 className="section-h1 mt-1">
+            Completed <span className="text-shimmer">projects</span>
+          </h1>
+          <p className="mt-2 text-sm text-zinc-400">
+            {completed.length} shipped — nice work.
+          </p>
+        </div>
 
-      {/* Add/Edit Project Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4">
-              {isEditMode ? "Edit Project" : "Create New Project"}
+        {completed.length === 0 ? (
+          <div className="app-card flex flex-col items-center justify-center px-6 py-16 text-center">
+            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/30 to-cyan-400/30">
+              <svg viewBox="0 0 24 24" className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-white">
+              Nothing shipped yet
             </h3>
-            <div>
-              <label className="block mb-2">Project Name</label>
-              <input
-                type="text"
-                value={newProject.projectName}
-                onChange={(e) =>
-                  setNewProject({ ...newProject, projectName: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-              />
-            </div>
-            <div>
-              <label className="block mb-2">Due Date</label>
-              <input
-                type="date"
-                value={newProject.dueDate}
-                onChange={(e) =>
-                  setNewProject({ ...newProject, dueDate: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-              />
-            </div>
-            <div>
-              <label className="block mb-2">Status</label>
-              <select
-                value={newProject.status}
-                onChange={(e) =>
-                  setNewProject({ ...newProject, status: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded-md p-2 mb-4"
-              >
-                <option value="In progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                
-              </select>
-            </div>
-            <button
-              onClick={isEditMode ? handleEditProject : handleAddProject}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              {isEditMode ? "Save Changes" : "Create Project"}
-            </button>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="ml-2 px-4 py-2 rounded-md border"
-            >
-              Cancel
-            </button>
+            <p className="mt-2 max-w-xs text-sm text-zinc-400">
+              Once a project is marked completed, it will live here.
+            </p>
           </div>
-        </div>
-      )}
-      {/* Teammates Modal */}
-      {isTeammatesModalOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-xl font-semibold mb-4">Add Teammates</h3>
-            <div className="space-y-2">
-            {teammates.map((teammate) => (
-  <label key={teammate.teammateEmail} className="flex items-center">
-    <input
-      type="checkbox"
-      checked={selectedTeammates.includes(teammate.teammateEmail)}
-      onChange={(e) => {
-        const email = teammate.teammateEmail;
-        setSelectedTeammates((prev) =>
-          e.target.checked
-            ? [...prev, email]
-            : prev.filter((emailInList) => emailInList !== email)
-        );
-      }}
-      className="mr-2"
-    />
-    {teammate.teammateEmail}  {/* This should display the teammate's email */}
-  </label>
-))}
-            </div>
-            <button
-              onClick={handleAddTeammates}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
-            >
-              Add Teammates
-            </button>
-            <button
-              onClick={() => setIsTeammatesModalOpen(false)}
-              className="ml-2 px-4 py-2 rounded-md border mt-4"
-            >
-              Cancel
-            </button>
+        ) : (
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {completed.map((project) => (
+              <ProjectCard key={project._id} project={project} />
+            ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-export default ProjectsPage;
-
-
+export default CompletedProjectsPage;

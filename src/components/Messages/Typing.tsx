@@ -1,16 +1,16 @@
-const Typing = ({user}) => {
-    return (
-        <div className="px-1 md:px-6 py-1 flex">
-            <span className="logo text-2xl bg-blue-600 text-white rounded-full py-2 my-auto text-center px-4 mr-2 flex items-center">
-                {user.charAt(0).toUpperCase()}
-            </span>
-            <div className="loader bg-slate-300 rounded-2xl p-5">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-        </div>
-    )
-}
+const Typing = ({ user }: any) => {
+  return (
+    <div className="my-2 flex items-end gap-2 px-2">
+      <span className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-cyan-400 text-sm font-bold text-white ring-2 ring-[#070815]">
+        {user.charAt(0).toUpperCase()}
+      </span>
+      <div className="loader rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  );
+};
 
-export default Typing
+export default Typing;

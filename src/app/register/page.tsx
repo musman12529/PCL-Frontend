@@ -361,7 +361,7 @@ const Register = () => {
                 AI
               </span>
               <div className="text-sm">
-                <div className="font-semibold text-white">PCL Copilot</div>
+                <div className="font-semibold text-white">AI Copilot</div>
                 <div className="text-zinc-400">
                   Ready to help on day one — yes, even on the free plan.
                 </div>

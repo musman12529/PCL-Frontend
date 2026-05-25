@@ -2,62 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .gradient {
-  background: linear-gradient(150deg, rgb(29, 142, 255) 50%, rgb(0, 106, 255) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.18) 0%,
+    rgba(34, 211, 238, 0.14) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
-
 
 .message img {
   max-width: 30vw;
+  border-radius: 0.75rem;
 }
 
 .message .logo {
-  min-width: 3rem;
-}
-
-*::-webkit-scrollbar {
-  width: .6rem;
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: rgb(163, 209, 255);
-  border-radius: 1rem;
+  min-width: 2.5rem;
 }
 
 .loader {
   display: flex;
   justify-content: space-between;
-  gap: .5rem;
+  gap: 0.4rem;
 }
 
 .loader div {
-  width: .5rem;
-  height: .5rem;
-  background-color: black;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: linear-gradient(135deg, #a855f7, #22d3ee);
   border-radius: 50%;
-  animation: grow-shrink 1.5s infinite;
+  animation: grow-shrink 1.4s infinite;
 }
 
-.loader div:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.loader div:nth-child(2) {
-  animation-delay: 0.3s;
-}
-
-.loader div:nth-child(3) {
-  animation-delay: 0.6s;
-}
+.loader div:nth-child(1) { animation-delay: 0s; }
+.loader div:nth-child(2) { animation-delay: 0.2s; }
+.loader div:nth-child(3) { animation-delay: 0.4s; }
 
 @keyframes grow-shrink {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.5);
-  }
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.5); opacity: 1; }
 }
 
 @media screen and (max-width: 767px) {

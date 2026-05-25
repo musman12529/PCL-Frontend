@@ -22,12 +22,12 @@ const Footer = () => {
               </svg>
             </span>
             <span className="text-base font-semibold text-white">
-              PCL<span className="text-shimmer">.studio</span>
+              Project <span className="text-shimmer">Management</span> Platform
             </span>
           </div>
           <p className="mt-4 max-w-sm text-sm text-zinc-400">
-            The project OS for high-velocity teams. Plan, build and ship without
-            the bloat.
+            The all-in-one platform for high-velocity teams. Plan, build and
+            ship without the bloat.
           </p>
         </div>
 
@@ -51,7 +51,7 @@ const Footer = () => {
 
       <div className="border-t border-white/5">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-3 px-6 py-6 text-xs text-zinc-500 sm:flex-row sm:items-center">
-          <p>&copy; {new Date().getFullYear()} PCL Studio. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Project Management Platform. All rights reserved.</p>
           <p className="font-mono">Crafted in the dark with neon &amp; caffeine.</p>
         </div>
       </div>

@@ -1,126 +1,189 @@
-// components/OffCanvasMenu.tsx
-import Link from "next/link";
+"use client";
 
-import React from "react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+
+const navItems = [
+  {
+    href: "/",
+    label: "Home",
+    icon: (
+      <path d="M3 11l9-8 9 8M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10" />
+    ),
+  },
+  {
+    href: "/myProjects",
+    label: "Projects",
+    icon: <path d="M3 7h6v10H3zM10 7h11v4H10zM10 13h11v4H10z" />,
+  },
+  {
+    href: "/myTeam",
+    label: "Team",
+    icon: (
+      <>
+        <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+        <circle cx="8.5" cy="7" r="4" />
+        <path d="M20 8v6M23 11h-6" />
+      </>
+    ),
+  },
+  {
+    href: "/completedProject",
+    label: "Completed",
+    icon: <path d="M20 6L9 17l-5-5" />,
+  },
+  {
+    href: "/overdueTask",
+    label: "Overdue",
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 8v4M12 16h.01" />
+      </>
+    ),
+  },
+];
 
 const SlidingMenu = () => {
-  const toggleButton = () => {
-    const cardContainer = document.getElementById("cardContainer");
-    if (cardContainer) {
-      cardContainer.style.width = cardContainer.style.width === "350px" ? "0" : "350px";
-    }
-  };
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
-  const closeButton = () => {
-    const cardContainer = document.getElementById("cardContainer");
-    if (cardContainer) {
-      cardContainer.style.width = "0";
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
-  };
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
-    <div>
-      {/* Off-Canvas Toggle Button */}
+    <>
       <button
-        onClick={toggleButton}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        onClick={() => setOpen(true)}
+        className="btn-ghost inline-flex h-10 w-10 items-center justify-center rounded-full"
+        aria-label="Open menu"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="lucide lucide-menu"
         >
-          <line x1="4" x2="20" y1="12" y2="12" />
           <line x1="4" x2="20" y1="6" y2="6" />
+          <line x1="4" x2="20" y1="12" y2="12" />
           <line x1="4" x2="20" y1="18" y2="18" />
         </svg>
       </button>
 
-      {/* Off-Canvas Menu */}
+      {/* Backdrop */}
       <div
-        id="cardContainer"
-        className="fixed top-0 right-0 h-full w-0 overflow-hidden bg-black bg-opacity-30 backdrop-blur-lg shadow-lg transition-all duration-300 z-10"
+        onClick={() => setOpen(false)}
+        className={`fixed inset-0 z-40 transition-opacity duration-300 ${
+          open
+            ? "pointer-events-auto opacity-100 app-overlay"
+            : "pointer-events-none opacity-0"
+        }`}
+      />
+
+      {/* Panel */}
+      <aside
+        className={`fixed right-0 top-0 z-50 h-full w-[320px] transform border-l border-white/10 bg-[#0a0b1e]/90 backdrop-blur-2xl transition-transform duration-300 ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
       >
-        <button
-          onClick={closeButton}
-          className="text-red-500 absolute top-6 right-6 z-30"
-        >
-          <svg
-            className="w-8 h-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M6 18L18 6M6 6l12 12"
-            ></path>
-          </svg>
-        </button>
+        <div className="pointer-events-none absolute -top-20 -right-20 h-60 w-60 rounded-full bg-fuchsia-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 -left-20 h-60 w-60 rounded-full bg-cyan-500/15 blur-3xl" />
 
-        {/* Menu Items */}
-        <div className="w-full h-full px-8 py-16 relative">
-          <div className="w-full h-auto flex flex-col gap-y-1 mt-6">
-            {/* Repeat for each menu item */}
-            <div className="w-full h-auto flex items-center gap-x-4 text-gray-200 hover:text-gray-100 hover:bg-blue-500 rounded-md px-4 py-3 ease-out duration-500 cursor-pointer">
-            <Link href="/
-">
-              <h1 className="text-base font-medium">Home
-              </h1>
-              </Link>
-
-              
+        <div className="relative flex h-full flex-col p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">
+                Workspace
+              </p>
+              <p className="mt-1 text-base font-semibold text-white">
+                <span className="text-shimmer">Quick</span> navigation
+              </p>
             </div>
-            
-            <div className="w-full h-auto flex items-center gap-x-4 text-gray-200 hover:text-gray-100 hover:bg-blue-500 rounded-md px-4 py-3 ease-out duration-500 cursor-pointer">
-            <Link href="/myProjects
-">
-              <h1 className="text-base font-medium">Projects
-              </h1>
-              </Link>
-
-              
-            </div>
-            <div className="w-full h-auto flex items-center gap-x-4 text-gray-200 hover:text-gray-100 hover:bg-blue-500 rounded-md px-4 py-3 ease-out duration-500 cursor-pointer">
-            <Link href="/myTeam
-">
-              <h1 className="text-base font-medium">Team
-              </h1>
-              </Link>
-
-              
-            </div>
-            <div className="w-full h-auto flex items-center gap-x-4 text-gray-200 hover:text-gray-100 hover:bg-blue-500 rounded-md px-4 py-3 ease-out duration-500 cursor-pointer">
-            <Link href="/completedProject
-">
-              <h1 className="text-base font-medium">Completed Projects
-              </h1>
-              </Link>
-
-              
-            </div>
-            
-            
-            
+            <button
+              onClick={() => setOpen(false)}
+              className="btn-ghost inline-flex h-9 w-9 items-center justify-center rounded-full"
+              aria-label="Close menu"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
           </div>
 
-          {/* Footer */}
-          <div className="absolute bottom-6 left-0 px-8 w-full h-auto text-center border-t border-gray-800 pt-6 text-white text-sm font-thin">
-            Copyright © 2024. All rights reserved.
+          <nav className="mt-8 flex flex-col gap-1.5">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${
+                    isActive
+                      ? "border border-fuchsia-400/30 bg-fuchsia-500/10 text-white"
+                      : "border border-transparent text-zinc-300 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  <span
+                    className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${
+                      isActive
+                        ? "bg-gradient-to-br from-fuchsia-500 to-cyan-400 text-white shadow-[0_0_20px_-5px_rgba(168,85,247,0.7)]"
+                        : "bg-white/5 text-zinc-300 group-hover:bg-white/10"
+                    }`}
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      {item.icon}
+                    </svg>
+                  </span>
+                  <span className="font-medium">{item.label}</span>
+                  {isActive && (
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-fuchsia-400 shadow-[0_0_10px_2px_rgba(232,121,249,0.7)]" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="mt-auto border-t border-white/5 pt-6 text-center text-xs text-zinc-500">
+            &copy; {new Date().getFullYear()} Project Management Platform
           </div>
         </div>
-      </div>
-    </div>
+      </aside>
+    </>
   );
 };
 
