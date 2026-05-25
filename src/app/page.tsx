@@ -200,30 +200,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Trust logos marquee */}
-        <div className="mt-24 overflow-hidden">
-          <p className="text-center text-xs uppercase tracking-[0.3em] text-zinc-500">
-            Trusted by teams at
-          </p>
-          <div className="relative mt-6">
-            <div className="flex w-max animate-marquee gap-16 opacity-70">
-              {Array(2)
-                .fill(0)
-                .flatMap((_, dup) =>
-                  ["Lumen", "Nebula", "Orbital", "Particle", "Quantum", "Helios", "Aether", "Vortex"].map(
-                    (n) => (
-                      <span
-                        key={`${dup}-${n}`}
-                        className="text-xl font-semibold tracking-widest text-zinc-400/80"
-                      >
-                        ◆ {n.toUpperCase()}
-                      </span>
-                    )
-                  )
-                )}
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* ============== FEATURES ============== */}
